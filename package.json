@@ -1,6 +1,6 @@
 {
     "name": "@buuhv/jwt-js",
-    "version": "1.0.0",
+    "version": "1.0.0.1",
     "private": false,
     "dependencies": {
         "crypto-js": "^4.0.0"
@@ -50,9 +50,9 @@
         "url": "git+https://github.com/geeknection/react-native-video-player.git"
     },
     "keywords": [
-        "react-native-video",
-        "React native video player controls",
-        "React native video player with video controls"
+        "jwt",
+        "jwt js",
+        "nodejs jwt"
     ],
     "author": "BuuhV",
     "license": "MIT",
