@@ -1,23 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es6",
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "module": "commonjs",
-    "outDir": "dist",
-    "moduleResolution": "node",
-    "pretty": true,
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false,
     "sourceMap": true,
-    "baseUrl": ".",
-    "typeRoots" : ["./node_modules/@types"],
-    "resolveJsonModule": true
+    "target": "es5",
+    "outDir": "dist"
   },
-  "files": [
-    "./node_modules/@types/mocha/index.d.ts",
-    "./node_modules/@types/node/index.d.ts"
-  ],
   "include": [
-    "src/**/*.ts"
+    "src/**/*"
   ],
   "exclude": [
     "node_modules"
