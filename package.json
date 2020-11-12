@@ -1,6 +1,6 @@
 {
     "name": "@buuhv/jwt-js",
-    "version": "1.0.0.1",
+    "version": "1.0.1",
     "private": false,
     "dependencies": {
         "crypto-js": "^4.0.0"
