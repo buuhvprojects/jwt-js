@@ -10,25 +10,6 @@ var JWT = /** @class */ (function () {
     function JWT(SECRET_KEY, ISS) {
         var _this = this;
         /**
-         * Registra um JWT
-         * @return String
-         */
-        this.register = function (params) {
-            if (params === void 0) { params = {}; }
-            try {
-                params['iss'] = _this.ISS;
-                var headerJWT = _this.buildHeader();
-                var payloadJWT = _this.buildPayload(params);
-                var prev_token = headerJWT + '.' + payloadJWT;
-                var signature = _this.buildSignature(prev_token);
-                var jwt = headerJWT + '.' + payloadJWT + '.' + signature;
-                return jwt;
-            }
-            catch (error) {
-                throw error;
-            }
-        };
-        /**
          * @todo Constroi o cabeçalho do JWT
          * @returns {String} - base64
          */
@@ -78,7 +59,7 @@ var JWT = /** @class */ (function () {
         this.buildSignature = function (prev_token) {
             try {
                 var enc = _this.props.enc;
-                var hash = CryptoJS.HmacSHA256(prev_token, SECRET_KEY);
+                var hash = CryptoJS.HmacSHA256(prev_token, _this.SECRET_KEY);
                 var prev_signature = enc.Base64.stringify(hash);
                 prev_signature = prev_signature.replace(/=+$/, '');
                 prev_signature = prev_signature.replace(/\+/g, '-');
@@ -170,6 +151,25 @@ var JWT = /** @class */ (function () {
                     status: false,
                     message: error.message
                 };
+            }
+        };
+        /**
+         * Registra um JWT
+         * @return String
+         */
+        this.register = function (params) {
+            if (params === void 0) { params = {}; }
+            try {
+                params['iss'] = _this.ISS;
+                var headerJWT = _this.buildHeader();
+                var payloadJWT = _this.buildPayload(params);
+                var prev_token = headerJWT + '.' + payloadJWT;
+                var signature = _this.buildSignature(prev_token);
+                var jwt = headerJWT + '.' + payloadJWT + '.' + signature;
+                return jwt;
+            }
+            catch (error) {
+                throw error;
             }
         };
         this.props = CryptoJS;
