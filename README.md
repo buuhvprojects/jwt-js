@@ -1,4 +1,4 @@
-# `@buuhv/react-native-video-player`
+# `@buuhv/jwt-js`
 
 JWT is a service class to your manage the sessions of your application
 
