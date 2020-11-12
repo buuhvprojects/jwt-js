@@ -10,7 +10,7 @@ JWT is a service class to your manage the sessions of your application
 ## Usage
 
 ```javascript
-import JWT from '@buuhv/jwt-js/dist';
+import JWT from '@buuhv/jwt-js';
 ```
 
 ---
