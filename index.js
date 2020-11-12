@@ -107,10 +107,23 @@ var JWT = /** @class */ (function () {
                 if (signature === prev_signature) {
                     var words = enc.Base64.parse(split[1]);
                     var textString = JSON.parse(enc.Utf8.stringify(words));
-                    if (textString.expires && (textString.expires >= new Date().getTime()))
+                    if (textString.expires) {
+                        if (textString.expires >= new Date().getTime()) {
+                            return {
+                                status: false
+                            };
+                        }
+                        else {
+                            return {
+                                status: true
+                            };
+                        }
+                    }
+                    else {
                         return {
                             status: true
                         };
+                    }
                 }
                 else {
                     return {
