@@ -206,12 +206,10 @@ class JWT {
             let words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))));
 
             const textString = JSON.parse(enc.Utf8.stringify(words));
-            const words2 = enc.Utf8.stringify(textString);
-            const textString2 = enc.Base64.parse(words2);
 
             return {
                 status: true,
-                data: textString2
+                data: textString
             };
         }
         catch (error) {

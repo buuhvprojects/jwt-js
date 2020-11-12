@@ -152,11 +152,9 @@ var JWT = /** @class */ (function () {
                 var split = access_token.split('.');
                 var words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))));
                 var textString = JSON.parse(enc.Utf8.stringify(words));
-                var words2 = enc.Utf8.stringify(textString);
-                var textString2 = enc.Base64.parse(words2);
                 return {
                     status: true,
-                    data: textString2
+                    data: textString
                 };
             }
             catch (error) {
