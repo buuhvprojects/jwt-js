@@ -14,18 +14,30 @@ import JWT from '@buuhv/jwt-js';
 
 const jwtService = new JWT('SECRET_KEY', 'ISS');
 
+//expires is optional and you can use any value inside object
 const newToken = jwtService.register({
     expires: new Date().getTime() 'optional'
     'OBJECT DATA'
 });
 
-const isValid = jwtService.checkJWT('JWT');
+const isValid = jwtService.checkJWT('OBJECT WITH HEADERS OF REQUEST');
 if (isValid.status === false) console.log(isValid.message);
 
-const jwtData = jwtService.data();
+const jwtData = jwtService.data('OBJECT WITH HEADERS OF REQUEST');
 if (jwtData.status === true) console.log(jwtData.data);
 if (jwtData.status === false) console.log(jwtData.message);
 
+```
+---
+
+## Request Object with Headers Example
+
+```
+req: {
+    headers: {
+        Authorization|authorization: 'Barear ....'
+    };
+}
 ```
 
 ---
