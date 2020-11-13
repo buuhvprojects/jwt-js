@@ -35,7 +35,7 @@ if (jwtData.status === false) console.log(jwtData.message);
 ```
 req: {
     headers: {
-        Authorization|authorization: 'Barear ....'
+        Authorization|authorization: 'Bearer ....'
     };
 }
 ```
