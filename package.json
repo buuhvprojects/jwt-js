@@ -1,6 +1,6 @@
 {
     "name": "@buuhv/jwt-js",
-    "version": "1.0.10",
+    "version": "1.0.13",
     "private": false,
     "dependencies": {
         "crypto-js": "^4.0.0"
@@ -53,7 +53,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/geeknection/react-native-video-player.git"
+        "url": "git+https://github.com/geeknection/jwt-js.git"
     },
     "keywords": [
         "jwt",
@@ -63,7 +63,7 @@
     "author": "BuuhV",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/geeknection/react-native-video-player/issues"
+        "url": "https://github.com/geeknection/jwt-js/issues"
     },
     "publishConfig": {
         "registry": "https://registry.npmjs.org/",

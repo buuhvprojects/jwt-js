@@ -11,6 +11,21 @@ JWT is a service class to your manage the sessions of your application
 
 ```javascript
 import JWT from '@buuhv/jwt-js';
+
+const jwtService = new JWT('SECRET_KEY', 'ISS');
+
+const newToken = jwtService.register({
+    expires: new Date().getTime() 'optional'
+    'OBJECT DATA'
+});
+
+const isValid = jwtService.checkJWT('JWT');
+if (isValid.status === false) console.log(isValid.message);
+
+const jwtData = jwtService.data();
+if (jwtData.status === true) console.log(jwtData.data);
+if (jwtData.status === false) console.log(jwtData.message);
+
 ```
 
 ---
