@@ -159,7 +159,7 @@ class JWT {
 
                 const textString = JSON.parse(enc.Utf8.stringify(words));
                 if (textString.expires) {
-                    if (textString.expires >= new Date().getTime()) {
+                    if (textString.expires <= new Date().getTime()) {
                         return {
                             status: false
                         }
