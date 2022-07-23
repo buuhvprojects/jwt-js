@@ -105,8 +105,9 @@ var JWT = /** @class */ (function () {
                 var prev_token = headerJWT + '.' + payloadJWT;
                 var prev_signature = _this.buildSignature(prev_token);
                 if (signature === prev_signature) {
-                    var words = enc.Base64.parse(split[1]);
-                    var textString = JSON.parse(enc.Utf8.stringify(words));
+                    var payload = CryptoJS.AES.decrypt(split[1], _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                    var words = enc.Base64.parse(payload);
+                    var textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                     if (textString.expires) {
                         if (textString.expires <= new Date().getTime()) {
                             return {
@@ -150,9 +151,9 @@ var JWT = /** @class */ (function () {
                 var token = req.headers['Authorization'] || req.headers['authorization'];
                 var access_token = token.replace(/Bearer /g, '');
                 var split = access_token.split('.');
-                var payload = CryptoJS.AES.encrypt(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))), _this.SECRET_KEY).toString();
-                var words = enc.Base64.parse(payload);
-                var textString = JSON.parse(enc.Utf8.stringify(words));
+                var payload = CryptoJS.AES.decrypt(split[1], _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                var words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(payload))));
+                var textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                 return {
                     status: true,
                     data: textString

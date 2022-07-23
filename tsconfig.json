@@ -6,7 +6,8 @@
     "sourceMap": true,
     "target": "es5",
     "outDir": "./",
-    "declaration": true
+    "declaration": true,
+    "types": ["node"]
   },
   "include": [
     "src/**/*"

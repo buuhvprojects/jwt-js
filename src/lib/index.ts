@@ -155,9 +155,10 @@ class JWT {
             const prev_signature = this.buildSignature(prev_token);
             if (signature === prev_signature) {
 
-                let words = enc.Base64.parse(split[1]);
+                const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                let words = enc.Base64.parse(payload);
 
-                const textString = JSON.parse(enc.Utf8.stringify(words));
+                const textString =  JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                 if (textString.expires) {
                     if (textString.expires <= new Date().getTime()) {
                         return {
@@ -203,10 +204,10 @@ class JWT {
             const access_token = token.replace(/Bearer /g, '');
             const split = access_token.split('.');
 
-            const payload = CryptoJS.AES.encrypt(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))), this.SECRET_KEY).toString();
-            const words = enc.Base64.parse(payload);
+            const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+            let words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(payload))));
 
-            const textString = JSON.parse(enc.Utf8.stringify(words));
+            const textString =  JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
 
             return {
                 status: true,
