@@ -94,7 +94,7 @@ class JWT {
             payload = payload.replace(/\+/g, '-');
             payload = payload.replace(/\//g, '_');
 
-            return payload;
+            return CryptoJS.AES.encrypt(payload, this.SECRET_KEY).toString();
         }
         catch (error) {
             throw error;
@@ -203,7 +203,8 @@ class JWT {
             const access_token = token.replace(/Bearer /g, '');
             const split = access_token.split('.');
 
-            let words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))));
+            const payload = CryptoJS.AES.encrypt(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(split[1]))), this.SECRET_KEY).toString();
+            const words = enc.Base64.parse(payload);
 
             const textString = JSON.parse(enc.Utf8.stringify(words));
 
