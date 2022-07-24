@@ -9,6 +9,18 @@ var CryptoJS = require("crypto-js");
 var JWT = /** @class */ (function () {
     function JWT(SECRET_KEY, ISS) {
         var _this = this;
+        this.removeSpecials = function (value) {
+            value = value.replace(/=+$/, '');
+            value = value.replace(/\+/g, '-');
+            value = value.replace(/\//g, '_');
+            return value;
+        };
+        this.addSpecials = function (value) {
+            value = value.replace(/=+$/, '');
+            value = value.replace(/\-/g, '+');
+            value = value.replace(/\_/g, '/');
+            return value;
+        };
         /**
          * @todo Constroi o cabeçalho do JWT
          * @returns {String} - base64
@@ -22,10 +34,7 @@ var JWT = /** @class */ (function () {
                 };
                 var headerParse = enc.Utf8.parse(JSON.stringify(headerObject));
                 var headerStringify = enc.Base64.stringify(headerParse);
-                var header = headerStringify.replace(/=+$/, '');
-                header = header.replace(/\+/g, '-');
-                header = header.replace(/\//g, '_');
-                return header;
+                return _this.removeSpecials(headerStringify);
             }
             catch (error) {
                 throw error;
@@ -43,14 +52,10 @@ var JWT = /** @class */ (function () {
                 var payloadStringify = enc.Base64.stringify(payloadParse);
                 var payloadParse2 = enc.Utf8.parse(JSON.stringify(payloadStringify));
                 var payloadStringify2 = enc.Base64.stringify(payloadParse2);
-                var payload = payloadStringify2.replace(/=+$/, '');
-                payload = payload.replace(/\+/g, '-');
-                payload = payload.replace(/\//g, '_');
-                return CryptoJS.AES.encrypt(payload, _this.SECRET_KEY)
-                    .toString()
-                    .replace(/\+/g, '-')
-                    .replace(/\//g, '_')
-                    .replace(/=+$/, '');
+                var payload = _this.removeSpecials(payloadStringify2);
+                var encripted = CryptoJS.AES.encrypt(payload, _this.SECRET_KEY)
+                    .toString();
+                return _this.removeSpecials(encripted);
             }
             catch (error) {
                 throw error;
@@ -65,10 +70,7 @@ var JWT = /** @class */ (function () {
                 var enc = _this.props.enc;
                 var hash = CryptoJS.HmacSHA256(prev_token, _this.SECRET_KEY);
                 var prev_signature = enc.Base64.stringify(hash);
-                prev_signature = prev_signature.replace(/=+$/, '');
-                prev_signature = prev_signature.replace(/\+/g, '-');
-                prev_signature = prev_signature.replace(/\//g, '_');
-                return prev_signature;
+                return _this.removeSpecials(prev_signature);
             }
             catch (error) {
                 throw error;
@@ -109,7 +111,7 @@ var JWT = /** @class */ (function () {
                 var prev_token = headerJWT + '.' + payloadJWT;
                 var prev_signature = _this.buildSignature(prev_token);
                 if (signature === prev_signature) {
-                    var payload = CryptoJS.AES.decrypt(split[1], _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                    var payload = CryptoJS.AES.decrypt(_this.addSpecials(split[1]), _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
                     var words = enc.Base64.parse(payload);
                     var textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                     if (textString.expires) {
@@ -155,7 +157,7 @@ var JWT = /** @class */ (function () {
                 var token = req.headers['Authorization'] || req.headers['authorization'];
                 var access_token = token.replace(/Bearer /g, '');
                 var split = access_token.split('.');
-                var payload = CryptoJS.AES.decrypt(split[1], _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                var payload = CryptoJS.AES.decrypt(_this.addSpecials(split[1]), _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
                 var words = enc.Base64.parse(payload);
                 var textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                 return {

@@ -51,6 +51,18 @@ class JWT {
         this.ISS = ISS;
         this.SECRET_KEY = SECRET_KEY;
     }
+    removeSpecials = (value: string) => {
+        value = value.replace(/=+$/, '');
+        value = value.replace(/\+/g, '-');
+        value = value.replace(/\//g, '_');
+        return value;
+    }
+    addSpecials = (value: string) => {
+        value = value.replace(/=+$/, '');
+        value = value.replace(/\-/g, '+');
+        value = value.replace(/\_/g, '/');
+        return value;
+    }
     /**
      * @todo Constroi o cabeçalho do JWT
      * @returns {String} - base64
@@ -64,11 +76,7 @@ class JWT {
             };
             const headerParse = enc.Utf8.parse(JSON.stringify(headerObject));
             const headerStringify = enc.Base64.stringify(headerParse);
-
-            let header = headerStringify.replace(/=+$/, '');
-            header = header.replace(/\+/g, '-');
-            header = header.replace(/\//g, '_');
-            return header;
+            return this.removeSpecials(headerStringify);
         }
         catch (error) {
             throw error;
@@ -89,16 +97,11 @@ class JWT {
             const payloadParse2 = enc.Utf8.parse(JSON.stringify(payloadStringify));
             const payloadStringify2 = enc.Base64.stringify(payloadParse2);
 
-            let payload = payloadStringify2.replace(/=+$/, '');
+            const payload = this.removeSpecials(payloadStringify2);
+            const encripted = CryptoJS.AES.encrypt(payload, this.SECRET_KEY)
+            .toString();
 
-            payload = payload.replace(/\+/g, '-');
-            payload = payload.replace(/\//g, '_');
-
-            return CryptoJS.AES.encrypt(payload, this.SECRET_KEY)
-            .toString()
-            .replace(/\+/g, '-')
-            .replace(/\//g, '_')
-            .replace(/=+$/, '');
+            return this.removeSpecials(encripted);
         }
         catch (error) {
             throw error;
@@ -112,11 +115,8 @@ class JWT {
         try {
             const { enc } = this.props;
             const hash = CryptoJS.HmacSHA256(prev_token, this.SECRET_KEY);
-            let prev_signature = enc.Base64.stringify(hash);
-            prev_signature = prev_signature.replace(/=+$/, '');
-            prev_signature = prev_signature.replace(/\+/g, '-');
-            prev_signature = prev_signature.replace(/\//g, '_');
-            return prev_signature;
+            const prev_signature = enc.Base64.stringify(hash);
+            return this.removeSpecials(prev_signature);
         }
         catch (error) {
             throw error;
@@ -159,7 +159,7 @@ class JWT {
             const prev_signature = this.buildSignature(prev_token);
             if (signature === prev_signature) {
 
-                const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+                const payload = CryptoJS.AES.decrypt(this.addSpecials(split[1]), this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
                 let words = enc.Base64.parse(payload);
 
                 const textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
@@ -208,7 +208,7 @@ class JWT {
             const access_token = token.replace(/Bearer /g, '');
             const split = access_token.split('.');
 
-            const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
+            const payload = CryptoJS.AES.decrypt(this.addSpecials(split[1]), this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
             let words = enc.Base64.parse(payload);
 
             const textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));

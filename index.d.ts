@@ -37,6 +37,8 @@ declare class JWT {
     ISS: string;
     SECRET_KEY: string;
     constructor(SECRET_KEY: string, ISS: string);
+    removeSpecials: (value: string) => string;
+    addSpecials: (value: string) => string;
     /**
      * @todo Constroi o cabeçalho do JWT
      * @returns {String} - base64
