@@ -94,7 +94,11 @@ class JWT {
             payload = payload.replace(/\+/g, '-');
             payload = payload.replace(/\//g, '_');
 
-            return CryptoJS.AES.encrypt(payload, this.SECRET_KEY).toString();
+            return CryptoJS.AES.encrypt(payload, this.SECRET_KEY)
+            .toString()
+            .replace(/\+/g, '-')
+            .replace(/\//g, '_')
+            .replace(/=+$/, '');
         }
         catch (error) {
             throw error;
@@ -158,7 +162,7 @@ class JWT {
                 const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
                 let words = enc.Base64.parse(payload);
 
-                const textString =  JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
+                const textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                 if (textString.expires) {
                     if (textString.expires <= new Date().getTime()) {
                         return {
@@ -205,10 +209,9 @@ class JWT {
             const split = access_token.split('.');
 
             const payload = CryptoJS.AES.decrypt(split[1], this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
-            let words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(payload))));
+            let words = enc.Base64.parse(payload);
 
-            const textString =  JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
-
+            const textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
             return {
                 status: true,
                 data: textString

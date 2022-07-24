@@ -46,7 +46,11 @@ var JWT = /** @class */ (function () {
                 var payload = payloadStringify2.replace(/=+$/, '');
                 payload = payload.replace(/\+/g, '-');
                 payload = payload.replace(/\//g, '_');
-                return CryptoJS.AES.encrypt(payload, _this.SECRET_KEY).toString();
+                return CryptoJS.AES.encrypt(payload, _this.SECRET_KEY)
+                    .toString()
+                    .replace(/\+/g, '-')
+                    .replace(/\//g, '_')
+                    .replace(/=+$/, '');
             }
             catch (error) {
                 throw error;
@@ -152,7 +156,7 @@ var JWT = /** @class */ (function () {
                 var access_token = token.replace(/Bearer /g, '');
                 var split = access_token.split('.');
                 var payload = CryptoJS.AES.decrypt(split[1], _this.SECRET_KEY).toString(CryptoJS.enc.Utf8);
-                var words = enc.Base64.parse(JSON.parse(enc.Utf8.stringify(enc.Base64.parse(payload))));
+                var words = enc.Base64.parse(payload);
                 var textString = JSON.parse(Buffer.from(JSON.parse(enc.Utf8.stringify(words)), 'base64').toString('binary'));
                 return {
                     status: true,
