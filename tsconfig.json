@@ -7,7 +7,7 @@
     "target": "es5",
     "outDir": "./",
     "declaration": true,
-    "types": ["node"]
+    "types": ["node", "@types/node"]
   },
   "include": [
     "src/**/*"

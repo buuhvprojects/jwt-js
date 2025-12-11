@@ -1,5 +1,5 @@
 import * as CryptoJS from 'crypto-js';
-declare type WordArray = CryptoJS.lib.WordArray;
+type WordArray = CryptoJS.lib.WordArray;
 interface jwtProps {
     enc: {
         Utf8: {

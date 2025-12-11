@@ -1,8 +1,6 @@
 import * as CryptoJS from 'crypto-js';
 
 type WordArray = CryptoJS.lib.WordArray;
-type CipherParams = CryptoJS.lib.CipherParams;
-type X64Word = CryptoJS.x64.Word;
 
 interface jwtProps {
     enc: {
